@@ -21,11 +21,16 @@
 bool pagedir_init(const char* pageDirectory);
 
 /**************** pagedir_save() ****************/
-/* Creates a file in pageDirectory to store a web page.
-* First line is page's URL, second line is depth at which page was found,
-* third line is contents of webpage. 
+/* Constructs a file pathname in pageDirectory to store a web page.
+* Returns pathname. 
 */
 
-void pagedir_save(const webpage_t* page, const char* pageDirectory, const int docID);
+char* pagedir_save(const char* pageDirectory, const int docID);
+
+/**************** pagedir_write() ****************/
+/* Writes a webpage to a given output file. 
+ * First line is page's URL, second line is depth at which page was found,
+* third line is contents of webpage. */
+void pagedir_write(const webpage_t* page, const char* pathname);
 
 #endif // _PAGEDIR_H
