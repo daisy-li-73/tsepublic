@@ -28,15 +28,9 @@ pagedir_init(const char* pageDirectory) {
     return false;
 }
 
-/**************** pagedir_save() ****************/
+/**************** pagedir_write() ****************/
 /* see pagedir.h for description */
-void pagedir_save(const webpage_t* page, const char* pageDirectory, const int docID) {
-    char id[12];
-    sprintf(id, "%d", docID); 
-    char pathname[strlen(pageDirectory) + strlen(id)+1];
-    // create pageDirectory/id pathname
-    sprintf(pathname, "%s/%s", pageDirectory, id);
-
+void pagedir_write(const webpage_t* page, const char* pathname) {
     FILE* fp = fopen(pathname, "w");
     // check if file is successfully opened for writing 
     if (fp != NULL) {
@@ -45,4 +39,16 @@ void pagedir_save(const webpage_t* page, const char* pageDirectory, const int do
         fprintf(fp, "%s\n", webpage_getHTML(page));
         fclose(fp);
     }
+}
+
+/**************** pagedir_save() ****************/
+/* see pagedir.h for description */
+char* pagedir_save(const char* pageDirectory, const int docID) {
+    char id[12];
+    sprintf(id, "%d", docID); 
+    char* pathname = malloc(strlen(pageDirectory) + strlen(id)+2);
+    // create pageDirectory/id pathname
+    sprintf(pathname, "%s/%s", pageDirectory, id);
+
+    return pathname;
 }

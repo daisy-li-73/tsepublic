@@ -1,0 +1,74 @@
+ml () {  module ml "$@"
+}
+module () {  _module_raw "$@" 2>&1
+}
+_module_raw () {  eval `/usr/bin/tclsh8.6 /usr/lib/x86_64-linux-gnu/modulecmd.tcl bash "$@"`;
+ _mlstatus=$?;
+ return $_mlstatus
+}
+#!/bin/bash
+# test command-line argument parsing 
+
+# Various invalid arguments for indexer ---
+# No arguments
+./indexer 
+usage: ./indexer pageDirectory indexFilename 
+echo $?
+1
+
+# One argument
+./indexer ../data/crawldata/letters3
+usage: ./indexer pageDirectory indexFilename 
+echo $?
+1
+
+# Three arguments 
+./indexer ../data/crawldata/letters3 ../data/indices/newIndex hi
+usage: ./indexer pageDirectory indexFilename 
+echo $?
+1
+
+# Invalid pageDirectory (non-existent path)
+./indexer crawldata ../data/indices/newIndex 
+Error: crawldata does not exist 
+echo $?
+2
+
+# Invalid pageDirectory (not a crawler directory)
+./indexer ../data/indices ../data/indices/newIndex
+Error: ../data/indices is not a crawler produced directory 
+echo $?
+2
+
+# Invalid indexFile (non-existent path)
+./indexer ../data/crawldata/letters3 data/newIndex
+Error: cannot write to data/newIndex 
+echo $?
+2
+
+# Invalid indexFile (read-only directory)
+./indexer ../data/crawldata/letters3 ../data/indices/testDir
+Error: cannot write to ../data/indices/testDir 
+echo $?
+2
+
+# Invalid indexFile (existing, read-only directory)
+./indexer ../data/crawldata/letters3 ../data/indices/readOnly
+Error: cannot write to ../data/indices/readOnly 
+echo $?
+2
+
+# Valid arguments: pageDirectory = letters3
+./indexer ../data/crawldata/letters3 ../data/indices/letters3.ndx
+
+
+# Valid arguments: pageDirectory = letters0
+./indexer ../data/crawldata/letters0 ../data/indices/letters0.ndx
+Error: ../data/crawldata/letters0 is not a crawler produced directory 
+
+# Invalid arguments for indextest (zero arguments)
+./indextest
+usage: ./indextest oldFilename newFilename 
+
+# Valid arguments for indextest: oldIndexFile = letters3
+./indextest  ../data/indices/letters3.ndx ../data/indices/letters3.ndx2
