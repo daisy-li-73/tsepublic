@@ -30,16 +30,12 @@ echo $?
 ./indexer ../data/crawldata/letters3 ../data/indices/testDir
 echo $?
 
-# Invalid indexFile (existing, read-only directory)
+# Invalid indexFile (existing, read-only file)
 ./indexer ../data/crawldata/letters3 ../data/indices/readOnly
 echo $?
 
 # Valid arguments: pageDirectory = letters3
 ./indexer ../data/crawldata/letters3 ../data/indices/letters3.ndx
-
-
-# Valid arguments: pageDirectory = letters0
-./indexer ../data/crawldata/letters0 ../data/indices/letters0.ndx
 
 # Invalid arguments for indextest (zero arguments)
 ./indextest

@@ -23,7 +23,7 @@ _module_raw () {  eval `/usr/bin/tclsh8.6 /usr/lib/x86_64-linux-gnu/modulecmd.tc
 # ./crawler https://www.amazon.com/ pgdir 2
 
 # valid arguments; letters
-./crawler http://cs50tse.cs.dartmouth.edu/tse/letters/index.html pgdir 3
+./crawler http://cs50tse.cs.dartmouth.edu/tse/letters/index.html ../data/crawldata/letters3 3
  0   Fetched: http://cs50tse.cs.dartmouth.edu/tse/letters/index.html
  0  Scanning: http://cs50tse.cs.dartmouth.edu/tse/letters/index.html
  0     Found: http://cs50tse.cs.dartmouth.edu/tse/letters/A.html

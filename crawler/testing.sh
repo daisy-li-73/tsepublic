@@ -15,7 +15,7 @@
 # ./crawler https://www.amazon.com/ pgdir 2
 
 # valid arguments; letters
-./crawler http://cs50tse.cs.dartmouth.edu/tse/letters/index.html pgdir 3
+./crawler http://cs50tse.cs.dartmouth.edu/tse/letters/index.html ../data/crawldata/letters3 3
 
 # valid arguments; letters
 #./crawler http://cs50tse.cs.dartmouth.edu/tse/letters/ pgdir 10

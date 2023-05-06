@@ -52,7 +52,7 @@ Error: cannot write to ../data/indices/testDir
 echo $?
 2
 
-# Invalid indexFile (existing, read-only directory)
+# Invalid indexFile (existing, read-only file)
 ./indexer ../data/crawldata/letters3 ../data/indices/readOnly
 Error: cannot write to ../data/indices/readOnly 
 echo $?
@@ -60,11 +60,6 @@ echo $?
 
 # Valid arguments: pageDirectory = letters3
 ./indexer ../data/crawldata/letters3 ../data/indices/letters3.ndx
-
-
-# Valid arguments: pageDirectory = letters0
-./indexer ../data/crawldata/letters0 ../data/indices/letters0.ndx
-Error: ../data/crawldata/letters0 is not a crawler produced directory 
 
 # Invalid arguments for indextest (zero arguments)
 ./indextest

@@ -109,7 +109,8 @@ static void crawl(char* seedURL, char* pageDirectory, const int maxDepth) {
   // fetch the HTML for that webpage and save it 
     if (webpage_fetch(page)) {
       logr(webpage_getDepth(page), "Fetched", webpage_getURL(page));
-      pagedir_save(page, pageDirectory, docID);
+      char* pathname = pagedir_save(pageDirectory, docID);
+      pagedir_write(page, pathname);
       if (webpage_getDepth(page) < maxDepth) {
         logr(webpage_getDepth(page), "Scanning", webpage_getURL(page));
         pageScan(page, pagesToCrawl, pagesSeen);
