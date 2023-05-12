@@ -115,6 +115,7 @@ static void crawl(char* seedURL, char* pageDirectory, const int maxDepth) {
         logr(webpage_getDepth(page), "Scanning", webpage_getURL(page));
         pageScan(page, pagesToCrawl, pagesSeen);
       }
+      mem_free(pathname);
       docID++;
     }
     else {
