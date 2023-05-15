@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include "webpage.h"
 #include <string.h>
+#include <dirent.h>
 
 /**************** pagedir_init() ****************/
 /* Creates .crawler file in pageDirectory 
@@ -32,5 +33,10 @@ char* pagedir_save(const char* pageDirectory, const int docID);
  * First line is page's URL, second line is depth at which page was found,
 * third line is contents of webpage. */
 void pagedir_write(const webpage_t* page, const char* pathname);
+
+/**************** pagedir_save() ****************/
+/* Verifies that a given directory is a crawler-produced directory by 
+ * checking for .crawler file */
+bool pagedir_validate(char* pageDirectory);
 
 #endif // _PAGEDIR_H
