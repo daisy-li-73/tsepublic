@@ -1,5 +1,5 @@
 # CS50 TSE
-## Student name (GitHub username)
+## Daisy Li (daisy-li-73)
 
 The assignment and Specs are in a [public repo](https://github.com/CS50Spring2023/labs/tse).
 Do not clone that repo; view it on GitHub.
