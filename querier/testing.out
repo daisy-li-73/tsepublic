@@ -1,0 +1,125 @@
+ml () {  module ml "$@"
+}
+module () {  _module_raw "$@" 2>&1
+}
+_module_raw () {  eval `/usr/bin/tclsh8.6 /usr/lib/x86_64-linux-gnu/modulecmd.tcl bash "$@"`;
+ _mlstatus=$?;
+ return $_mlstatus
+}
+#!/bin/bash
+# test command-line argument parsing 
+
+# Various invalid arguments for indexer ---
+# No arguments
+# ./querier
+
+# # 1 argument
+# ./querier ../data/crawldata/letters3
+
+# # 3 arguments
+# ./querier ../data/crawldata/letters3 ../data/indices/letters3.ndx hi
+
+# # Invalid pageDirectory (path does not exist)
+# ./querier ../data/letters3 ../data/indices/letters3.ndx hi
+
+# # Invalid pageDirectory (not a crawler-produced directory)
+# ./querier ../data/indices/testDir ../data/indices/letters3.ndx hi
+
+# # Invalid indexFile (non-existent path)
+# ./querier ../data/crawldata/letters3 data/newIndex
+
+# # Invalid indexFile (read-only directory)
+# ./querier ../data/crawldata/letters3 ../data/indices/testDir
+
+# # Invalid indexFile (existing, read-only file)
+# ./querier ../data/crawldata/letters3 ../data/indices/readOnly
+
+# Valid command-line arguments
+# Various invalid queries ---
+  ./querier ../data/crawldata/letters3 ../data/indices/letters3.ndx < badQuery.txt
+Error: 'and' cannot be first 
+Error: 'or' cannot be first 
+Error: 'and' cannot be first 
+Error: 'or' cannot be first 
+Error: 'and' cannot be last 
+Error: 'and' and 'or' cannot be adjacent 
+Error: 'and' and 'and' cannot be adjacent 
+Error: 'or' and 'and' cannot be adjacent 
+Error: bad character '!' in query 
+Error: bad character '(' in query 
+or
+and earth
+or earth
+planet earth or
+Error: 'or' cannot be last 
+planet earth and
+planet earth and or science
+planet earth and and science
+planet earth or and science
+Warning!
+(The Lunar Chronicles #4.5)(null)
+# Fuzzquery 
+pdir="../data/crawldata/toscrape2"
+indx="../data/indices/toscrape2.ndx"
+./fuzzquery $indx 10 0 | ./querier $pdir $indx
+./fuzzquery: generating 10 queries from 13563 words
+Query: runway and vaccine
+No documents match. 
+nears OR white introduces OR ekhart acceptance 
+Query: nears or white introduces or ekhart acceptance
+score   1 doc  415: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/rain-fish_728/index.html
+score   1 doc  447: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/something-borrowed-darcy-rachel-1_224/index.html
+greenidge settling OR electricity 
+Query: greenidge settling or electricity
+score   1 doc  344: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-project_856/index.html
+score   1 doc  101: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/benjamin-franklin-an-american-life_460/index.html
+score   1 doc  27: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/mesaerion-the-best-science-fiction-stories-1800-1849_983/index.html
+endlessly lune realities OR political OR curdled OR egg 
+Query: endlessly lune realities or political or curdled or egg
+score   6 doc  160: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/political-suicide-missteps-peccadilloes-bad-calls-backroom-hijinx-sordid-pasts-rotten-breaks-and-just-plain-dumb-mistakes-in-the-annals-of-american-politics_917/index.html
+score   5 doc  253: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-most-perfect-thing-inside-and-outside-a-birds-egg_938/index.html
+score   5 doc  155: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/brilliant-beacons-a-history-of-the-american-lighthouse_515/index.html
+score   4 doc  26: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/libertarianism-for-beginners_982/index.html
+score   2 doc  103: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/setting-the-world-on-fire-the-brief-astonishing-life-of-st-catherine-of-siena_603/index.html
+score   2 doc  53: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/why-the-right-went-wrong-conservatism-from-goldwater-to-the-tea-party-and-beyond_781/index.html
+score   1 doc  202: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/approval-junkie-adventures-in-caring-too-much_363/index.html
+score   1 doc  352: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-kite-runner_847/index.html
+score   1 doc  305: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-midnight-watch-a-novel-of-the-titanic-and-the-californian_640/index.html
+score   1 doc  292: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-star-touched-queen_764/index.html
+score   1 doc  285: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-star-touched-queen_642/index.html
+score   1 doc  238: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/slow-states-of-collapse-poems_960/index.html
+score   1 doc  159: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/thomas-jefferson-and-the-tripoli-pirates-the-forgotten-war-that-changed-american-history_867/index.html
+score   1 doc  158: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/zealot-the-life-and-times-of-jesus-of-nazareth_785/index.html
+score   1 doc  157: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/a-distant-mirror-the-calamitous-14th-century_652/index.html
+score   1 doc  156: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/1491-new-revelations-of-the-americas-before-columbus_650/index.html
+score   1 doc  154: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/most-blessed-of-the-patriarchs-thomas-jefferson-and-the-empire-of-the-imagination_509/index.html
+score   1 doc  151: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/catherine-the-great-portrait-of-a-woman_424/index.html
+score   1 doc  148: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/americas-war-for-the-greater-middle-east-a-military-history_361/index.html
+score   1 doc  145: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/category/books/history_32/index.html
+score   1 doc  101: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/benjamin-franklin-an-american-life_460/index.html
+score   1 doc  96: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-14th-colony-cotton-malone-11_744/index.html
+score   1 doc  37: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html
+weak OR cruelty built facilities AND sheets OR warn 
+Query: weak or cruelty built facilities and sheets or warn
+score   2 doc  487: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/kierkegaard-a-christian-missionary-to-christians_527/index.html
+score   2 doc  291: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-hidden-oracle-the-trials-of-apollo-1_752/index.html
+score   1 doc  240: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-selfish-gene_81/index.html
+score   1 doc  151: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/catherine-the-great-portrait-of-a-woman_424/index.html
+lushly supplementary unspeakable dynasties OR altogether 
+Query: lushly supplementary unspeakable dynasties or altogether
+score   1 doc  408: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/playing-from-the-heart_481/index.html
+hills 
+Query: hills
+score   2 doc  39: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-requiem-red_995/index.html
+rushing sponsored OR disgruntled 
+Query: rushing sponsored or disgruntled
+score   1 doc  525: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/pop-gun-war-volume-1-gift_918/index.html
+buffalo 
+Query: buffalo
+score   1 doc  144: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-pioneer-woman-cooks-dinnertime-comfort-classics-freezer-food-16-minute-meals-and-other-delicious-ways-to-solve-supper_943/index.html
+score   1 doc  18: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/americas-cradle-of-quarterbacks-western-pennsylvanias-football-factory-from-johnny-unitas-to-joe-montana_974/index.html
+populate OR reminos OR cheeked AND orange AND shipmates 
+Query: populate or reminos or cheeked and orange and shipmates
+score   3 doc  286: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/searching-for-meaning-in-gailana_648/index.html
+score   1 doc  290: http://cs50tse.cs.dartmouth.edu/tse/toscrape/catalogue/the-bane-chronicles-the-bane-chronicles-1-11_746/index.html
+(null)
