@@ -126,18 +126,22 @@ parseArgs(const int argc, char* argv[], char** pageDirectory, char** indexFilena
 index_t* loadIndex(FILE* input) {
   int size = file_numLines(input);
   index_t* newIndex = index_new(size);
-  char* word;
+  if (newIndex != NULL) {
+    char* word;
   // Extract data from index file into index struct
   while ((word = file_readWord(input)) != NULL) {
     counters_t* ctr = counters_new();
     int docID, count;
 
-    //Extract (docID, count) pairs
-    while(fscanf(input, "%d %d", &docID, &count) == 2) {
-      counters_set(ctr, docID, count);
-    }
-    index_insert(newIndex, word, ctr);
-    mem_free(word);
+    if (ctr != NULL) {
+        //Extract (docID, count) pairs
+        while(fscanf(input, "%d %d", &docID, &count) == 2) {
+          counters_set(ctr, docID, count);
+        }
+        index_insert(newIndex, word, ctr);
+        mem_free(word);
+      }
+   }
   }
   return newIndex;
 }
@@ -201,7 +205,7 @@ bool validateQuery(char* words[], int numTokens) {
     return false;
   }
   if (strcmp(words[numTokens-1], "or") == 0) {
-    printf("Error: 'or' cannot be last \n");
+    fprintf(stderr, "Error: 'or' cannot be last \n");
     return false;
   }
   if (strcmp(words[numTokens-1], "and") == 0) {
@@ -237,7 +241,8 @@ bool validateQuery(char* words[], int numTokens) {
  void* lookup(index_t* index, char* words[], int numTokens) {
    // cumulative counterset of docs which match query
    counters_t* result = counters_new();
-   counters_t* temp = index_find(index, words[0]);
+   if (result != NULL) {
+    counters_t* temp = index_find(index, words[0]);
 
    for (int i = 1; i <= numTokens; i++) {
     // if at end of query, merge temp into result
@@ -259,6 +264,7 @@ bool validateQuery(char* words[], int numTokens) {
     // find intersection of curr and temp
       counters_t* curr = index_find(index, words[i]);
       counters_intersect(temp, curr);
+    }
     }
   }
   return result;

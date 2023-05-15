@@ -55,33 +55,24 @@ Check that input is valid according to syntax described in specs
 
 Do the real work of looking up words in the index to answer the user's query
 Pseudocode:
+		 creates a new result and temp counter
+      iterates through words array
+      if reach end of array
+        merge temp and result
+      if find "and"
+        intersect temp and result
+      if find "or"
+        merge temp and result
+        clear temp
+      return result
 
-	initialize the hashtable and add the seedURL
-	initialize the bag and add a webpage representing the seedURL at depth 0
-	while bag is not empty
-		pull a webpage from the bag
-		fetch the HTML for that webpage
-		if fetch was successful,
-			save the webpage to pageDirectory
-			if the webpage is not at maxDepth,
-				pageScan that HTML
-		delete that webpage
-	delete the hashtable
-	delete the bag
-
-### pageScan
-
-This function implements the *pagescanner* mentioned in the design.
-Given a `webpage`, scan the given page to extract any links (URLs), ignoring non-internal URLs; for any URL not already seen before (i.e., not in the hashtable), add the URL to both the hashtable `pages_seen` and to the bag `pages_to_crawl`.
-Pseudocode:
-
-	while there is another URL in the page
-		if that URL is Internal,
-			insert the webpage into the hashtable
-			if that succeeded,
-				create a webpage_t for it
-				insert the webpage into the bag
-		free the URL
+### rankResults
+			  checks if result is empty
+        if yes, print appropriate message and return
+      iterate through result
+        find item with maxscore
+        print that item as specified in requirements 
+        set that item's count to 0
 
 ## Other modules
 
@@ -120,28 +111,24 @@ Indeed, `webpage_fetch` enforces the 1-second delay for each fetch, so our queri
 Detailed descriptions of each function's interface is provided as a paragraph comment prior to each function's implementation in `querier.c` and is not repeated here.
 
 ```c
-int main(const int argc, char* argv[]);
-static void parseArgs(const int argc, char* argv[],
-                      char** seedURL, char** pageDirectory, int* maxDepth);
-static void crawl(char* seedURL, char* pageDirectory, const int maxDepth);
-static void pageScan(webpage_t* page, bag_t* pagesToCrawl, hashtable_t* pagesSeen);
-```
-
-### pagedir
-
-Detailed descriptions of each function's interface is provided as a paragraph comment prior to each function's declaration in `pagedir.h` and is not repeated here.
-
-```c
-bool pagedir_init(const char* pageDirectory);
-void pagedir_save(const webpage_t* page, const char* pageDirectory, const int docID);
+static void prompt();
+static void parseArgs(const int argc, char* argv[], char** pageDirectory, char** indexFilename);
+index_t* loadIndex(FILE* indexFilename);
+int tokenize(char* query, char* words[]);
+bool validateQuery(char* words[], int numTokens);
+void* lookup(index_t* index, char* words[], int numTokens);
+void findMax(void* arg, const int docID, const int score);
+static void counters_merge(counters_t* ctrA, counters_t* ctrB);
+static void counters_merge_helper(void* arg, const int key, const int item);
+static void counters_intersect(counters_t* ctrA, counters_t* ctrB);
+static void counters_inter_helper(void* arg, const int key, const int item);
+static void rankResults(counters_t* result, char* pageDirectory);
+static void itemcount(void* arg, const int key, const int count);
 ```
 
 ## Error handling and recovery
 
 All the command-line parameters are rigorously checked before any data structures are allocated or work begins; problems result in a message printed to stderr and a non-zero exit status.
-
-Out-of-memory errors are handled by variants of the `mem_assert` functions, which result in a message printed to stderr and a non-zero exit status.
-We anticipate out-of-memory errors to be rare and thus allow the program to crash (cleanly) in this way.
 
 All code uses defensive-programming tactics to catch and exit (using variants of the `mem_assert` functions), e.g., if a function receives bad parameters.
 
@@ -151,27 +138,11 @@ That said, certain errors are caught and handled internally: for example, `paged
 
 Here is an implementation-specific testing plan.
 
-### Unit testing
-
-There are only two units (querier and pagedir).
-The querier represents the whole system and is covered below.
-The pagedir unit is tiny; it could be tested using a small C 'driver' to invoke its functions with various arguments, but it is likely sufficient to observe its behavior during the system test.
-
-### Regression testing
-
-The querier can take a long time to run on some sites when `maxDepth` is more than 2.
-For routine regression tests, we crawl the `letters` site at moderate depths; save the pageDirectory from one working run to compare (with `diff -r`) against future runs.
-
-> For Lab 4, you are not required to script regression tests, though you may find the technique useful for your own testing/debugging process.
-
 ### Integration/system testing
 
 We write a script `testing.sh` that invokes the querier several times, with a variety of command-line arguments.
 First, a sequence of invocations with erroneous arguments, testing each of the possible mistakes that can be made.
-Second, a run with valgrind over a moderate-sized test case (such as `toscrape` at depth 1).
-Third, runs over all three CS50 websites (`letters` at depths 0,1,2,10, `toscrape` at depths 0,1,2,3, `wikipedia` at depths 0,1,2).
+Second, a sequence of bad query syntaxes.
+Third, random queries generated by fuzzquery.
 Run that script with `bash -v testing.sh` so the output of querier is intermixed with the commands used to invoke the querier.
 Verify correct behavior by studying the output, and by sampling the files created in the respective pageDirectories.
-
-> For Lab 4, as noted in the assignment, you may submit a smaller test run.
-> Furthermore, we recommend turning off detailed logging output for these tests, as they make `testing.out` rather large!

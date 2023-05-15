@@ -28,7 +28,7 @@
 
 # Valid command-line arguments
 # Various invalid queries ---
-#  ./querier ../data/crawldata/letters3 ../data/indices/letters3.ndx < badQuery.txt
+  ./querier ../data/crawldata/letters3 ../data/indices/letters3.ndx < badQuery.txt
 
 # Fuzzquery 
 pdir="../data/crawldata/toscrape2"
